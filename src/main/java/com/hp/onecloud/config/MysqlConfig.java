@@ -97,6 +97,8 @@ public class MysqlConfig extends HikariDataSource {
 
                 try {
                     awsUtil.setSslProperties(AWS_CERTS_FILE);
+                    Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+
                     Connection connection = DriverManager.getConnection("jdbc:mysql://" + mysqlHost + ":" + mysqlPort,
                             awsUtil.setMySqlConnectionProperties(mysqlHost, username));
 

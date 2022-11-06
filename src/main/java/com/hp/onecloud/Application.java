@@ -1,16 +1,13 @@
 package com.hp.onecloud;
 
-import com.hp.onecloud.config.AwsUtil;
 import com.hp.onecloud.config.MysqlConfig;
 import com.hp.onecloud.util.Util;
-import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import software.amazon.jdbc.PropertyDefinition;
 
@@ -18,11 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.Properties;
-
-import static com.hp.onecloud.config.SecretConstants.*;
-import static com.hp.onecloud.config.SecretConstants.MYSQL_PORT;
 
 
 @SpringBootApplication

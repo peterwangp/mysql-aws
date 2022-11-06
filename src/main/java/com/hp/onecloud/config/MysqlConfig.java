@@ -86,7 +86,9 @@ public class MysqlConfig extends HikariDataSource {
 
                 //TODO remove this logic, once we have port setup in secret manager
                 if (mysqlPort == null || mysqlPort.length() == 0) {
+                    mysqlHost = "metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com";
                     mysqlPort = "3306";
+                    dbname = "metadata";
                 }
 
 //                try {
@@ -133,19 +135,20 @@ public class MysqlConfig extends HikariDataSource {
                 ds.setDataSourceClassName(AwsWrapperDataSource.class.getName());
 
                 // Configure AwsWrapperDataSource:
-                ds.addDataSourceProperty("jdbcProtocol", "jdbc:postgresql:");
+                ds.addDataSourceProperty("jdbcProtocol", "jdbc:mysql:");
                 ds.addDataSourceProperty("databasePropertyName", "databaseName");
                 ds.addDataSourceProperty("portPropertyName", "portNumber");
                 ds.addDataSourceProperty("serverPropertyName", "serverName");
 
                 // Specify the driver-specific data source for AwsWrapperDataSource:
-                ds.addDataSourceProperty("targetDataSourceClassName", "org.postgresql.ds.PGSimpleDataSource");
+                //ds.addDataSourceProperty("targetDataSourceClassName", "org.postgresql.ds.PGSimpleDataSource");
 
                 // Configuring PGSimpleDataSource:
                 Properties targetDataSourceProps = new Properties();
                 targetDataSourceProps.setProperty("serverName", mysqlHost);
                 targetDataSourceProps.setProperty("databaseName", dbname);
                 targetDataSourceProps.setProperty("portNumber", mysqlPort);
+                ds.addDataSourceProperty("jdbcUrl", "jdbc:aws-wrapper:mysql://metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com:3306");
 
                 ds.addDataSourceProperty("targetDataSourceProperties", targetDataSourceProps);
 

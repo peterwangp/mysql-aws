@@ -79,12 +79,6 @@ public class MysqlConfig extends HikariDataSource {
 
             if (!contains) {
 
-
-
-//            System.setProperty("javax.net.ssl.trustStore", "/usr/app/truststore.jks");
-//            System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-//            System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-
                 mysqlHost = System.getProperty(MYSQL_HOST);
                 dbname = System.getProperty(MYSQL_DBNAME);
                 //username = System.getProperty(MYSQL_USERNAME);
@@ -97,30 +91,30 @@ public class MysqlConfig extends HikariDataSource {
                     mysqlPort = "3306";
                 }
 
-                try {
-                    awsUtil.setSslProperties(AWS_CERTS_FILE);
-                    Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-
-
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://" + mysqlHost + ":" + mysqlPort,
-                            awsUtil.setMySqlConnectionProperties(mysqlHost, username));
-
-                    log.info("SSL Key File : {}", System.getProperty("javax.net.ssl.trustStore"));
-                    //verify the connection is successful
-                    Statement stmt = connection.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
-                    while (rs.next()) {
-                        String id = rs.getString(1);
-                        log.info("mysql connection test id : {}", id);
-                    }
-
-                    //close the connection
-                    stmt.close();
-                    connection.close();
-                }
-                catch (Exception ex) {
-                    log.info("MySQL connection setup error {}", ex.getMessage());
-                }
+//                try {
+//                    awsUtil.setSslProperties(AWS_CERTS_FILE);
+//                    Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+//
+//
+//                    Connection connection = DriverManager.getConnection("jdbc:mysql://" + mysqlHost + ":" + mysqlPort,
+//                            awsUtil.setMySqlConnectionProperties(mysqlHost, username));
+//
+//                    log.info("SSL Key File : {}", System.getProperty("javax.net.ssl.trustStore"));
+//                    //verify the connection is successful
+//                    Statement stmt = connection.createStatement();
+//                    ResultSet rs = stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
+//                    while (rs.next()) {
+//                        String id = rs.getString(1);
+//                        log.info("mysql connection test id : {}", id);
+//                    }
+//
+//                    //close the connection
+//                    stmt.close();
+//                    connection.close();
+//                }
+//                catch (Exception ex) {
+//                    log.info("MySQL connection setup error {}", ex.getMessage());
+//                }
 
 
                 String mysqlUrl = "jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + dbname + MYSQL_EXTRA_PARM;

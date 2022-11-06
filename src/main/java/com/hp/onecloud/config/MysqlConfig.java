@@ -148,7 +148,7 @@ public class MysqlConfig extends HikariDataSource {
                 targetDataSourceProps.setProperty("serverName", mysqlHost);
                 targetDataSourceProps.setProperty("databaseName", dbname);
                 targetDataSourceProps.setProperty("portNumber", mysqlPort);
-                ds.addDataSourceProperty("jdbcUrl", "jdbc:aws-wrapper:mysql://metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com:3306");
+                ds.addDataSourceProperty("jdbcUrl", "jdbc:mysql://metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com:3306/metadata");
 
                 ds.addDataSourceProperty("targetDataSourceProperties", targetDataSourceProps);
 

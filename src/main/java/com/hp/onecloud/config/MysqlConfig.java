@@ -157,7 +157,7 @@ public class MysqlConfig extends HikariDataSource {
                 // Attempt a connection:
                 try (final Connection conn = ds.getConnection();
                      final Statement statement = conn.createStatement();
-                     final ResultSet rs = statement.executeQuery("SELECT * from aurora_db_instance_identifier()")) {
+                     final ResultSet rs = statement.executeQuery("SELECT user from mysq.user")) {
                     while (rs.next()) {
                         System.out.println(rs.getString(1));
                     }

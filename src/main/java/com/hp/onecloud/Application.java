@@ -55,10 +55,11 @@ public class Application {
             // Attempt a connection
             try (Connection conn = DriverManager.getConnection(MYSQL_CONNECTION_STRING, properties);
                  Statement statement = conn.createStatement();
-                 ResultSet result = statement.executeQuery("select 1")) {
+                 ResultSet result = statement.executeQuery("select user from mysql.user")) {
+                    log.info("Test Result ==================>" + Util.getResult(result));
+                 }
 
-                log.info("Test Result ==================>" + Util.getResult(result));
-            }
+
 
             AwsUtil awsUtil = new AwsUtil();
 

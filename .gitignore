@@ -1,0 +1,20 @@
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+target/
+
+module1/.settings
+module2/.settings
+
+module1/.classpath
+module2/.classpath
+
+module1/.project
+module2/.project
+
+.project
+.settings/
+
+# IntelliJ IDE files
+**/.idea
+*.iml
+**/.vscode

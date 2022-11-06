@@ -1,0 +1,45 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+resources:
+  repositories:
+    - repository: templates
+      type: githubenterprise
+      name: codeway/templates         # Github Organization/Repository from where the templates are referred
+      endpoint: ghe                   # Github Service connection name set in ADO
+      # ref: refs/heads/some-branch   # Add to test template changes on a CodeWay pull request branch
+
+# Define the triggers for your pipeline (https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=example#triggers)
+trigger: # Trigger on branches
+  - main
+
+pr: # Trigger on pull requests towards branches
+  - main
+
+# Variable groups including configurations and secrets you want to use in this pipeline (Pipeline -> Library in ADO UI) 
+variables:
+  - group: Defaults                    # Name of variable groups set in ADO
+
+# HP CodeWay pipeline template to be executed and its parameters
+# For more details, please refer https://pages.github.azc.ext.hp.com/codeway/templates/docs/v1.0/pipeline-templates/onecloud-java-library-v1.html
+stages:
+  # template referred here is java-library-v0.yml present in codeway/templates repository
+  - template: templates/onecloud-java-library-v1.yaml@templates
+    parameters:
+      openjdkVersion: '17'    
+      versionMajorMinor: 0.0
+      mavenServiceConnections: nexus
+      dockerRegistryConnection: harbor
+
+      unitTestParams:
+        sonarProjectPrefix: $(SonarProjectPrefix)
+        sonarScan: true
+        codeCoverageToolOption: 'none'
+        testArtifacts:
+          - '**'
+
+      publishParams:
+        trunkBranch: 'refs/heads/main'
+        enablePublish: true

@@ -3,10 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Update it to your organization parent POM -->
+<!--    <parent>-->
+<!--        <groupId>com.hp.onecloud</groupId>-->
+<!--        <artifactId>onecloud-parent</artifactId>-->
+<!--        <version>0.0.12</version>-->
+<!--    </parent>-->
+
     <parent>
-        <groupId>com.hp.onecloud</groupId>
-        <artifactId>onecloud-parent</artifactId>
-        <version>0.0.12</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.0</version>
     </parent>
 
     <groupId>com.hp.onecloud</groupId>
@@ -35,25 +41,25 @@
     </properties>
 
     <repositories>
-        <repository>
-            <id>nexus-it</id>
+<!--        <repository>-->
+<!--            <id>nexus-it</id>-->
 
-            <url>https://nexus-int.corp.hpicloud.net/repository/onecloud-central/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+<!--            <url>https://nexus-int.corp.hpicloud.net/repository/onecloud-central/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
     </repositories>
 
     <distributionManagement>
-        <repository>
-            <id>nexus-it</id>
-            <!-- Update this URL with your project/team Nexus repository -->
-            <url>https://nexus-int.corp.hpicloud.net/repository/onecloud-releases/</url>
-        </repository>
+<!--        <repository>-->
+<!--            <id>nexus-it</id>-->
+<!--            &lt;!&ndash; Update this URL with your project/team Nexus repository &ndash;&gt;-->
+<!--            <url>https://nexus-int.corp.hpicloud.net/repository/onecloud-releases/</url>-->
+<!--        </repository>-->
     </distributionManagement>
 
     <dependencyManagement>
@@ -118,11 +124,11 @@
             <artifactId>log4j-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.hp.onecloud</groupId>
-            <artifactId>logging</artifactId>
-            <version>0.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.hp.onecloud</groupId>-->
+<!--            <artifactId>logging</artifactId>-->
+<!--            <version>0.0.0</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -52,3 +52,4 @@ Once the user has setup Nexus, the user can then click on 'Use this template' in
 # mysql-aws
 # mysql-aws
 # mysql-aws
+# mysql-aws

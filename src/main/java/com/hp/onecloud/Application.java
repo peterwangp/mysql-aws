@@ -6,6 +6,7 @@ import com.hp.onecloud.util.Util;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,6 +34,8 @@ public class Application {
             "jdbc:aws-wrapper:mysql://metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com:3306";
     private static final String USERNAME = "peterw";
 
+    @Autowired
+    MysqlConfig mysqlConfig;
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -61,36 +64,37 @@ public class Application {
 
 
 
-            AwsUtil awsUtil = new AwsUtil();
+           // AwsUtil awsUtil = new AwsUtil();
 
             String mysqlHost = "metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com";
             String dbname = "metadata";
             String username = "peterw";
             int mysqlPort = 3306;
 
-            try {
-                awsUtil.setSslProperties("rds-ca-bundle.pem");
-                String jdbcURL = "jdbc:mysql://" + mysqlHost + ":" + mysqlPort;
-                Connection connection = DriverManager.getConnection(jdbcURL,
-                        awsUtil.setMySqlConnectionProperties(mysqlHost, username));
+//            try {
+//                awsUtil.setSslProperties("rds-ca-bundle.pem");
+//                String jdbcURL = "jdbc:mysql://" + mysqlHost + ":" + mysqlPort;
+//                Connection connection = DriverManager.getConnection(jdbcURL,
+//                        awsUtil.setMySqlConnectionProperties(mysqlHost, username));
+//
+//                log.info("SSL Key File : {}", System.getProperty("javax.net.ssl.trustStore"));
+//                //verify the connection is successful
+//                Statement stmt = connection.createStatement();
+//                ResultSet rs = stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
+//                while (rs.next()) {
+//                    String id = rs.getString(1);
+//                    log.info("mysql connection test id : {}", id);
+//                }
+//
+//                //close the connection
+//                stmt.close();
+//                connection.close();
+//            }
+//            catch (Exception ex) {
+//                log.info("MySQL connection setup error -----> {}", ex.getMessage());
+//            }
 
-                log.info("SSL Key File : {}", System.getProperty("javax.net.ssl.trustStore"));
-                //verify the connection is successful
-                Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT 'Success!' FROM DUAL;");
-                while (rs.next()) {
-                    String id = rs.getString(1);
-                    log.info("mysql connection test id : {}", id);
-                }
-
-                //close the connection
-                stmt.close();
-                connection.close();
-            }
-            catch (Exception ex) {
-                log.info("MySQL connection setup error -----> {}", ex.getMessage());
-            }
-
+            mysqlConfig.dataSource();
         };
     }
 }

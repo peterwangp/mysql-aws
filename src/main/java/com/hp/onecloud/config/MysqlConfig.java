@@ -27,7 +27,7 @@ import java.util.Properties;
 import static com.hp.onecloud.config.SecretConstants.*;
 
 @Configuration
-@Conditional(MysqlLoadCondition.class)
+//@Conditional(MysqlLoadCondition.class)
 public class MysqlConfig extends HikariDataSource {
 
     private static final Logger log = LoggerFactory.getLogger(MysqlConfig.class);
@@ -53,7 +53,7 @@ public class MysqlConfig extends HikariDataSource {
     private String password;
 
     @Autowired
-    MysqlConfig(Environment environment, MysqlProperties mysqlProperties, @Qualifier("secretStorage") SecretStorage secretStorage) {
+    public MysqlConfig(Environment environment, MysqlProperties mysqlProperties, @Qualifier("secretStorage") SecretStorage secretStorage) {
         this.environment = environment;
         this.mysqlProperties = mysqlProperties;
         this.secretStorage = secretStorage;
@@ -61,21 +61,19 @@ public class MysqlConfig extends HikariDataSource {
 
     @DependsOn("secretStorage")
     @Bean(name = "mySqlDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource")
     @Primary
     public HikariDataSource dataSource()  {
 
         try {
 
-            AwsUtil awsUtil = new AwsUtil();
-
             //DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create().type(HikariDataSource.class);
 
-            String[] profiles = this.environment.getActiveProfiles();
-
-            boolean contains = Arrays.stream(profiles).anyMatch(LOCAL::equals);
-
-            log.info("profiles -> {} ", profiles[0]);
+//            String[] profiles = this.environment.getActiveProfiles();
+//
+//            boolean contains = Arrays.stream(profiles).anyMatch(LOCAL::equals);
+//
+//            log.info("profiles -> {} ", profiles[0]);
+            boolean contains = false;
 
             if (!contains) {
 
@@ -152,6 +150,15 @@ public class MysqlConfig extends HikariDataSource {
                 ds.addDataSourceProperty("targetDataSourceProperties", targetDataSourceProps);
 
                 log.info("MySQL ARN connection string : {} ", mysqlUrl);
+
+                // Attempt a connection:
+                try (final Connection conn = ds.getConnection();
+                     final Statement statement = conn.createStatement();
+                     final ResultSet rs = statement.executeQuery("SELECT * from aurora_db_instance_identifier()")) {
+                    while (rs.next()) {
+                        System.out.println(rs.getString(1));
+                    }
+                }
 
                 return ds;
 

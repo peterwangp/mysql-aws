@@ -15,12 +15,14 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain;
+import software.amazon.jdbc.ds.AwsWrapperDataSource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Properties;
 
 import static com.hp.onecloud.config.SecretConstants.*;
 
@@ -67,7 +69,7 @@ public class MysqlConfig extends HikariDataSource {
 
             AwsUtil awsUtil = new AwsUtil();
 
-            DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create().type(HikariDataSource.class);
+            //DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create().type(HikariDataSource.class);
 
             String[] profiles = this.environment.getActiveProfiles();
 
@@ -99,6 +101,7 @@ public class MysqlConfig extends HikariDataSource {
                     awsUtil.setSslProperties(AWS_CERTS_FILE);
                     Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 
+
                     Connection connection = DriverManager.getConnection("jdbc:mysql://" + mysqlHost + ":" + mysqlPort,
                             awsUtil.setMySqlConnectionProperties(mysqlHost, username));
 
@@ -128,14 +131,39 @@ public class MysqlConfig extends HikariDataSource {
 
                 log.info("mysql info -> token : {} ", token);
 
-                dataSourceBuilder.url(mysqlUrl);
-                dataSourceBuilder.username(username);
-                dataSourceBuilder.password(token);
-                dataSourceBuilder.driverClassName(MYSQL_DRIVER_CLASS);
+                HikariDataSource ds = new HikariDataSource();
+
+                // Configure the connection pool:
+                ds.setUsername("peterw");
+                ds.setPassword(token);
+
+                // Specify the underlying datasource for HikariCP:
+                ds.setDataSourceClassName(AwsWrapperDataSource.class.getName());
+
+                // Configure AwsWrapperDataSource:
+                ds.addDataSourceProperty("jdbcProtocol", "jdbc:postgresql:");
+                ds.addDataSourceProperty("databasePropertyName", "databaseName");
+                ds.addDataSourceProperty("portPropertyName", "portNumber");
+                ds.addDataSourceProperty("serverPropertyName", "serverName");
+
+                // Specify the driver-specific data source for AwsWrapperDataSource:
+                ds.addDataSourceProperty("targetDataSourceClassName", "org.postgresql.ds.PGSimpleDataSource");
+
+                // Configuring PGSimpleDataSource:
+                Properties targetDataSourceProps = new Properties();
+                targetDataSourceProps.setProperty("serverName", mysqlHost);
+                targetDataSourceProps.setProperty("databaseName", dbname);
+                targetDataSourceProps.setProperty("portNumber", mysqlPort);
+
+                ds.addDataSourceProperty("targetDataSourceProperties", targetDataSourceProps);
 
                 log.info("MySQL ARN connection string : {} ", mysqlUrl);
 
+                return ds;
+
             } else {
+                DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create().type(HikariDataSource.class);
+
                 mysqlHost = environment.getProperty("mysql.host");
                 mysqlPort = environment.getProperty("mysql.port");
                 username = environment.getProperty("mysql.username");
@@ -150,11 +178,12 @@ public class MysqlConfig extends HikariDataSource {
 
                 log.info("MySQL local connection string : {}  username : {} password : {} ", mysqlUrl, username, password);
 
+                HikariDataSource ds = (HikariDataSource) dataSourceBuilder.build();
+
+                return ds;
+
             }
 
-            HikariDataSource ds = (HikariDataSource) dataSourceBuilder.build();
-
-            return ds;
         }
         catch (Exception e) {
             log.info("MySQL local connection string failed with error message : {} ", e.getMessage());

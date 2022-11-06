@@ -5,6 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.rds.auth.GetIamAuthTokenRequest;
 import com.amazonaws.services.rds.auth.RdsIamAuthTokenGenerator;
+import com.hp.onecloud.util.Util;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,7 +160,7 @@ public class MysqlConfig extends HikariDataSource {
                      final Statement statement = conn.createStatement();
                      final ResultSet rs = statement.executeQuery("SELECT user from mysql.user")) {
                     while (rs.next()) {
-                        log.info("test connection pool ============> ", rs.getString(1));
+                        log.info("test connection pool ============> ", Util.getResult(rs) );
                     }
                 }
 

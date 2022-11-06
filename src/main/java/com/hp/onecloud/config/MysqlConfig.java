@@ -159,7 +159,7 @@ public class MysqlConfig extends HikariDataSource {
                      final Statement statement = conn.createStatement();
                      final ResultSet rs = statement.executeQuery("SELECT user from mysql.user")) {
                     while (rs.next()) {
-                        System.out.println(rs.getString(1));
+                        log.info("test connection pool ============> ", rs.getString(1));
                     }
                 }
 

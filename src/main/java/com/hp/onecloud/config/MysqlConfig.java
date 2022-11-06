@@ -155,19 +155,11 @@ public class MysqlConfig extends HikariDataSource {
 
                 log.info("MySQL ARN connection string : {} ", mysqlUrl);
 
-                // Attempt a connection:
-                try (final Connection conn = ds.getConnection();
-                     final Statement statement = conn.createStatement();
-                     final ResultSet rs = statement.executeQuery("select user from mysql.user")) {
-                    while (rs.next()) {
-                        log.info("test connection pool ============> ", rs.getString(1));
-                    }
-                }
-
+                // Test a connection from pool
                 try (Connection conn = ds.getConnection();
                      Statement statement = conn.createStatement();
                      ResultSet result = statement.executeQuery("select user from mysql.user")) {
-                    log.info("Pool Test Result 2==================>" + Util.getResult(result));
+                    log.info("Pool Test Result ==================>" + Util.getResult(result));
                 }
 
                 return ds;

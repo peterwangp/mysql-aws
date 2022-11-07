@@ -16,6 +16,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain;
+import software.amazon.jdbc.PropertyDefinition;
 import software.amazon.jdbc.ds.AwsWrapperDataSource;
 
 import java.sql.Connection;
@@ -129,8 +130,8 @@ public class MysqlConfig extends HikariDataSource {
                 HikariDataSource ds = new HikariDataSource();
 
                 // Configure the connection pool:
-                ds.setUsername("peterw");
-                ds.setPassword(token);
+//                ds.setUsername("peterw");
+//                ds.setPassword(token);
 
                 // Specify the underlying datasource for HikariCP:
                 ds.setDataSourceClassName(AwsWrapperDataSource.class.getName());
@@ -149,6 +150,8 @@ public class MysqlConfig extends HikariDataSource {
                 targetDataSourceProps.setProperty("serverName", mysqlHost);
                 targetDataSourceProps.setProperty("databaseName", dbname);
                 targetDataSourceProps.setProperty("portNumber", mysqlPort);
+                targetDataSourceProps.setProperty(PropertyDefinition.PLUGINS.name, "iam");
+                targetDataSourceProps.setProperty(PropertyDefinition.USER.name, "peterw");
                 ds.addDataSourceProperty("jdbcUrl", "jdbc:mysql://metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com:3306/metadata");
 
                 ds.addDataSourceProperty("targetDataSourceProperties", targetDataSourceProps);

@@ -56,7 +56,7 @@ public class Application {
                  final Statement statement = conn.createStatement();
                  final ResultSet rs = statement.executeQuery("SELECT * FROM mysql.user")) {
                 while (rs.next()) {
-                    log.info(rs.getString("user"));
+                    log.info("mysqlJDBC-------------->" + rs.getString("user"));
                 }
             }
 

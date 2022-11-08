@@ -5,6 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.rds.auth.GetIamAuthTokenRequest;
 import com.amazonaws.services.rds.auth.RdsIamAuthTokenGenerator;
+import com.hp.onecloud.util.CliCompatibleCredentialsProvider;
 import com.hp.onecloud.util.Util;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -130,8 +131,8 @@ public class MysqlConfig extends HikariDataSource {
                 HikariDataSource ds = new HikariDataSource();
 
                 // Configure the connection pool:
-//                ds.setUsername("peterw");
-//                ds.setPassword(token);
+                ds.setUsername("peterw");
+                ds.setPassword(token);
 
                 // Specify the underlying datasource for HikariCP:
                 ds.setDataSourceClassName(AwsWrapperDataSource.class.getName());
@@ -201,7 +202,7 @@ public class MysqlConfig extends HikariDataSource {
     public String getToken(String hostName, int port, String userName) {
 
         RdsIamAuthTokenGenerator authTokenGenerator = RdsIamAuthTokenGenerator.builder()
-                .credentials(new DefaultAWSCredentialsProviderChain())
+                .credentials(new CliCompatibleCredentialsProvider())
                 .region(String.valueOf(new DefaultAwsRegionProviderChain().getRegion()))
                 .build();
 

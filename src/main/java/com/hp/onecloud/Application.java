@@ -25,6 +25,10 @@ public class Application {
 
     public static final String MYSQL_CONNECTION_STRING =
             "jdbc:aws-wrapper:mysql://metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com:3306";
+
+    public static final String MYSQL_CONNECTION_STRING2 =
+            "jdbc:mysql:aws://metadata-api-dev.cluster-cfagqf2imh1x.us-west-2.rds.amazonaws.com:3306";
+
     private static final String USERNAME = "peterw";
 
     @Autowired
@@ -42,11 +46,27 @@ public class Application {
 //            userRepository.save(user2);
 //            userRepository.findAll().forEach(user -> System.out.println(user);
 
+            final Properties properties1 = new Properties();
+
+            properties1.setProperty("useAwsIam", "true");
+            properties1.setProperty("user", "peterw");
+
+            // Try and make a connection
+            try (final Connection conn = DriverManager.getConnection(MYSQL_CONNECTION_STRING2, properties1);
+                 final Statement statement = conn.createStatement();
+                 final ResultSet rs = statement.executeQuery("SELECT * FROM mysql.user")) {
+                while (rs.next()) {
+                    log.info(rs.getString("user"));
+                }
+            }
+
             final Properties properties = new Properties();
 
             // Enable AWS IAM database authentication and configure driver property values
             properties.setProperty(PropertyDefinition.PLUGINS.name, "iam");
             properties.setProperty(PropertyDefinition.USER.name, USERNAME);
+
+
 
             // Attempt a connection
             try (Connection conn = DriverManager.getConnection(MYSQL_CONNECTION_STRING, properties);
